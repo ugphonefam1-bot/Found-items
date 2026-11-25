@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ของหาย ตามหาเจ้าของ</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0f3d2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ของหาย">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#f3f4f7;--card:#fff;--tx:#1d2330;--mut:#6b7385;--bd:#e2e5ec;--pri:#2563eb;--lost:#dc2626;--found:#16a34a;--chip:#eef1f6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1b202b;--tx:#e8ebf2;--mut:#9aa3b5;--bd:#2c3342;--pri:#6d9bff;--lost:#f87171;--found:#4ade80;--chip:#262d3b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12151c;--card:#1b202b;--tx:#e8ebf2;--mut:#9aa3b5;--bd:#2c3342;--pri:#6d9bff;--lost:#f87171;--found:#4ade80;--chip:#262d3b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#1f6b4a 0,#0f3d2e 60%,#0a2a20 100%) fixed;color:var(--tx);font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;line-height:1.5;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.85;background-image:radial-gradient(3px 3px at 20px 30px,#fff,transparent),radial-gradient(2px 2px at 80px 120px,#fff,transparent),radial-gradient(4px 4px at 150px 60px,#fff,transparent),radial-gradient(2px 2px at 200px 180px,#fff,transparent),radial-gradient(3px 3px at 260px 100px,#fff,transparent);background-size:300px 220px;animation:snow 12s linear infinite}
+@keyframes snow{to{background-position:40px 220px}}
+body::after{content:"";position:fixed;top:0;left:0;right:0;height:8px;z-index:5;background:repeating-linear-gradient(90deg,#c62828 0 20px,#fff 20px 40px,#2e7d32 40px 60px)}
+@media (prefers-reduced-motion:reduce){body::before{animation:none}}
+header,main{position:relative;z-index:1;max-width:560px;margin:0 auto}
+header{padding:22px 16px 2px}
+h1{margin:0;font-size:1.4rem;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+main{padding:8px 16px calc(96px + env(safe-area-inset-bottom,0px))}
+input,select,textarea{width:100%;font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px;margin-top:4px}
+label{font-size:.85rem;color:var(--mut);display:block;margin-top:10px}
+button{font:inherit;cursor:pointer}
+button.pri{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:11px 18px;font-weight:600}
+button.pri:disabled{opacity:.5}
+button.ghost{background:var(--card);border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:7px 12px;font-size:.85rem}
+button.wide{width:100%;margin-top:10px}
+.chip{border:1px solid var(--bd);background:var(--chip);color:var(--tx);border-radius:999px;padding:6px 14px;font-size:.85rem;white-space:nowrap}
+.chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.scroll{overflow-x:auto;display:flex;gap:8px;padding:6px 0 10px}
+.panel{background:var(--card);border-radius:18px;padding:22px 18px;margin-top:14px;box-shadow:0 6px 20px rgba(0,0,0,.25);text-align:center}
+.panel h2{margin:0 0 6px}
+.hi{display:flex;align-items:center;color:#fff;margin:8px 0 4px;gap:8px}
+.stories{display:flex;gap:14px;overflow-x:auto;padding:8px 0}
+.st{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font-size:.75rem;width:62px;flex:none;cursor:pointer}
+.st span{max-width:62px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ring{padding:3px;border-radius:50%;background:conic-gradient(#f9ce34,#ee2a7b,#6228d7,#f9ce34);display:inline-block;line-height:0}
+.ring .av{border:3px solid var(--card)}
+.ring.s .av{width:52px;height:52px;font-size:1.2rem}
+.pick{display:grid;gap:14px;margin-top:12px}
+.big{border:0;border-radius:20px;padding:26px 18px;color:#fff;text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+.big.lost{background:linear-gradient(135deg,#c62828,#ef5350)}
+.big.found{background:linear-gradient(135deg,#1b7a3d,#43a047)}
+.big.chat{background:linear-gradient(135deg,#1d4ed8,#42a5f5)}
+.big .e{font-size:2.4rem;display:block}
+.big b{font-size:1.3rem;display:block;margin-top:2px}
+.big span.s{opacity:.9;font-size:.88rem}
+.top{display:flex;align-items:center;gap:10px;color:#fff;margin:6px 0}
+.top b{font-size:1.1rem}
+.post{background:var(--card);border-radius:14px;margin:14px 0;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.ph{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.ph .who{flex:1;min-width:0}
+.av{width:36px;height:36px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none;border:2px solid #e53935;object-fit:cover;cursor:pointer}
+.av.sm{width:28px;height:28px;font-size:.8rem;border-width:1px}
+.av.xl{width:84px;height:84px;font-size:2rem}
+.post img.pic{width:100%;max-height:520px;object-fit:cover;display:block}
+.acts{display:flex;gap:6px;align-items:center;padding:6px 12px 0}
+.ic{background:none;border:0;font-size:1.5rem;padding:2px 6px}
+.pb{padding:2px 14px 6px;font-size:.92rem}
+.meta{color:var(--mut);font-size:.8rem}
+[data-act="prof"]{cursor:pointer}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 9px;border-radius:999px;color:#fff;background:var(--mut)}
+.tag.lost{background:var(--lost)}.tag.found{background:var(--found)}.tag.general{background:var(--pri)}
+.cm{padding:1px 14px;font-size:.9rem;display:flex;gap:6px;align-items:flex-start}
+.cm div{flex:1}
+.x{background:none;border:0;color:var(--mut);font-size:.8rem}
+.more{background:none;border:0;color:var(--mut);padding:2px 14px;font-size:.85rem}
+.cadd{display:flex;align-items:center;gap:8px;border-top:1px solid var(--bd);padding:8px 12px;margin-top:8px}
+.cadd input{margin:0;border:0;background:transparent;padding:6px}
+.cadd .link{background:none;border:0;color:var(--pri);font-weight:700}
+.empty{text-align:center;color:#fff;padding:40px 0;opacity:.9;grid-column:1/-1}
+.pf{text-align:left}
+.pfhead{display:flex;align-items:center;gap:18px}
+.stats{display:flex;flex:1;justify-content:space-around;text-align:center}
+.stats b{display:block;font-size:1.15rem}.stats span{font-size:.8rem;color:var(--mut)}
+.pname{font-weight:700;margin-top:10px}.bio{white-space:pre-wrap;font-size:.92rem;color:var(--tx)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:14px}
+.tile{aspect-ratio:1;background:var(--card);overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.8rem;padding:4px;cursor:pointer}
+.tile img{width:100%;height:100%;object-fit:cover}
+.chatbox{background:var(--card);border-radius:14px;padding:10px;height:56vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.msg{display:flex;gap:8px;align-items:flex-start}
+.msg.me{flex-direction:row-reverse}
+.bub{background:var(--bg);border-radius:14px;padding:6px 12px;max-width:80%;word-break:break-word}
+.msg.me .bub{background:var(--pri);color:#fff}
+.msg.me .bub .meta{color:#dbe6ff}
+.msg .x{color:inherit;opacity:.6;padding:0 4px}
+.chatadd{display:flex;gap:8px;margin-top:10px}.chatadd input{margin:0}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--card);border-top:1px solid var(--bd);display:none;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{background:none;border:0;font-size:1.6rem;opacity:.5;padding:2px 18px}
+nav button.on{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:10}
+.modal.show{display:flex}
+.sheet{background:var(--card);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.santa{position:fixed;top:14%;left:0;z-index:4;font-size:2.4rem;white-space:nowrap;pointer-events:none;display:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+.santa.fly{display:block;animation:fly 10s linear forwards}
+@keyframes fly{0%{transform:translate(100vw,0)}33%{transform:translate(66vw,-22px)}66%{transform:translate(30vw,12px)}100%{transform:translate(-110%,-8px)}}
+</style>
+</head>
+<body>
+<header><h1>🎄 ของหาย ตามหาเจ้าของ ❄️</h1><button class="ghost" id="inst" style="display:none;margin-top:8px"></button></header>
+<main id="app"></main>
+<div class="santa" id="santa" aria-hidden="true">🦌🦌🛷🎅</div>
+<nav id="nav"><button data-go="home" id="nHome" aria-label="หน้าแรก">🏠</button><button data-go="chat" id="nChat" aria-label="แชต">💬</button><button id="nNew" aria-label="โพสต์ใหม่">➕</button><button data-act="myprof" id="nProf" aria-label="โปรไฟล์">👤</button></nav>
+
+<div class="modal" id="mNew"><div class="sheet">
+  <h2 style="margin:0">โพสต์ใหม่</h2>
+  <div class="row" style="margin-top:10px"><button class="chip on" id="tLost">😢 ของหาย</button><button class="chip" id="tFound">🙌 เก็บของได้</button><button class="chip" id="tChat">💬 พูดคุย</button></div>
+  <div id="fcWrap"><label>หมวดหมู่</label><select id="fCat"></select></div>
+  <label id="tlLabel">ชื่อสิ่งของ</label><input id="fTitle" maxlength="80" placeholder="เช่น กระเป๋าสตางค์สีดำ">
+  <label>รายละเอียด / ลักษณะเด่น</label><textarea id="fDesc" rows="3" maxlength="500"></textarea>
+  <div id="plWrap"><label>สถานที่ / วันเวลา</label><input id="fPlace" maxlength="100" placeholder="เช่น โรงอาหาร เมื่อวานเย็น">
+  <label>ช่องทางติดต่อ</label><input id="fContact" maxlength="80" placeholder="เบอร์โทร / LINE"></div>
+  <label>รูปภาพ</label><input type="file" id="fImg" accept="image/*">
+  <img id="prev" alt="" style="display:none;width:100%;border-radius:10px;margin-top:8px">
+  <div class="row" style="margin-top:14px"><button class="ghost" id="cancelNew">ยกเลิก</button><button class="pri" id="saveNew">โพสต์</button></div>
+  <div class="meta" id="err" style="color:var(--lost)"></div>
+</div></div>
+
+<div class="modal" id="mPf"><div class="sheet">
+  <h2 style="margin:0">แก้ไขโปรไฟล์</h2>
+  <label>รูปโปรไฟล์</label><input type="file" id="pImg" accept="image/*">
+  <img id="pPrev" alt="" style="display:none;width:96px;height:96px;border-radius:50%;object-fit:cover;margin-top:8px">
+  <label>ชื่อ</label><input id="pName" maxlength="40">
+  <label>คำอธิบายตัวเอง (Bio)</label><textarea id="pBio" rows="3" maxlength="150" placeholder="เช่น ม.5/2 ชอบถ่ายรูป"></textarea>
+  <div class="row" style="margin-top:14px"><button class="ghost" id="cancelPf">ยกเลิก</button><button class="pri" id="savePf">บันทึก</button></div>
+  <div class="meta" id="pErr" style="color:var(--lost)"></div>
+</div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+// ===== ใส่ค่าจาก Firebase Console (Project settings > Your apps > Web app) =====
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyAqo_CO14qitnSBda3lOPzu-pa8Zt2Tbc4",
+  authDomain:"found-items-in-school.firebaseapp.com",
+  projectId:"found-items-in-school",
+  storageBucket:"found-items-in-school.firebasestorage.app",
+  messagingSenderId:"263314478182",
+  appId:"1:263314478182:web:2970d367f4254800c809a7"
+};
+</script>
+<script>
+const CATS=["📱 มือถือ/อุปกรณ์","👛 กระเป๋า/กระเป๋าเงิน","🔑 กุญแจ","🪪 บัตร/เอกสาร","👕 เสื้อผ้า/เครื่องประดับ","🐶 สัตว์เลี้ยง","🎒 อื่น ๆ"];
+let db=null,user=null,myId="anon",canEdit=false,loaded=false,madeProf=false;
+let posts=[],comments=[],likes=[],chats=[],profiles={},fCat="all",imgData="",pfImg=null,newType="lost",editName=false,viewUid=null,viewPid=null,expanded=new Set();
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store={get(k){try{return localStorage.getItem(k)||""}catch(e){return ""}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let me=store.get("lf_name");
+const ago=t=>{const m=Math.floor((Date.now()-t)/60000);if(m<1)return"เมื่อสักครู่";if(m<60)return m+" นาทีที่แล้ว";const h=Math.floor(m/60);if(h<24)return h+" ชม.ที่แล้ว";return Math.floor(h/24)+" วันที่แล้ว"};
+const pkey=id=>String(id).replace(/[^\w.-]/g,"_");
+const nameOf=(uid,fb)=>(uid===myId&&me)?(profiles[uid]&&profiles[uid].name||me):((profiles[uid]&&profiles[uid].name)||fb||"ไม่ระบุชื่อ");
+const avatar=(uid,fb,cls="")=>{
+  const p=profiles[uid],n=nameOf(uid,fb),u=esc(uid);
+  if(p&&p.avatar)return `<img class="av ${cls}" src="${esc(p.avatar)}" alt="" data-act="prof" data-uid="${u}">`;
+  let h=0;for(const c of String(n))h=(h*31+c.charCodeAt(0))%360;
+  return `<div class="av ${cls}" style="background:hsl(${h} 50% 42%)" data-act="prof" data-uid="${u}">${esc([...String(n)][0]||"?")}</div>`;
+};
+const route=()=>{if(!me||editName)return"name";const h=location.hash.slice(1);return["lost","found","chat","profile","post"].includes(h)?h:"home"};
+const nav=h=>{if(location.hash.slice(1)===h)render();else location.hash=h};
+function shrink(file,max,cb){
+  const img=new Image(),u=URL.createObjectURL(file);
+  img.onload=()=>{
+    const s=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement("canvas");
+    c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    let q=.7,d=c.toDataURL("image/jpeg",q);
+    while(d.length>(max>300?170000:30000)&&q>.3){q-=.1;d=c.toDataURL("image/jpeg",q)}
+    URL.revokeObjectURL(u);cb(d);
+  };
+  img.src=u;
+}
+
+function render(){
+  const r=route(),app=$("app");
+  $("nav").style.display=r==="name"?"none":"flex";
+  $("nHome").classList.toggle("on",r==="home"||r==="lost"||r==="found"||r==="post");
+  $("nChat").classList.toggle("on",r==="chat");
+  $("nProf").classList.toggle("on",r==="profile"&&(!viewUid||viewUid===myId));
+  if(r==="name"){
+    app.innerHTML=`<div class="panel"><h2>ยินดีต้อนรับ 🎅</h2><div class="meta">ใส่ชื่อของคุณก่อนเข้าใช้งาน</div><input id="nm" maxlength="40" value="${esc(me)}" placeholder="ชื่อของคุณ" style="margin:14px 0;text-align:center"><button class="pri" id="nmGo" style="width:100%">เข้าสู่เว็บ</button></div>`;
+    const go=async()=>{const v=$("nm").value.trim();if(!v){$("nm").focus();return}
+      me=v;store.set("lf_name",v);editName=false;
+      if(db){try{await db.doc("profiles/"+pkey(myId)).set({bio:"",avatar:"",...(profiles[myId]||{}),userId:myId,name:v,updatedAt:Date.now()})}catch(e){}}
+      render()};
+    $("nmGo").onclick=go;$("nm").onkeydown=e=>{if(e.key==="Enter")go()};
+    return;
+  }
+  if(r==="home")return renderHome(app);
+  if(r==="profile")return renderProfile(app);
+  if(r==="post")return renderPost(app);
+  renderFeed(r,app);
+}
+function renderHome(app){
+  const n=t=>posts.filter(p=>p.type===t).length,seen=new Set([myId]),au=[];
+  posts.forEach(p=>{if(p.authorId&&!seen.has(p.authorId)&&au.length<12){seen.add(p.authorId);au.push(p)}});
+  const st=[{authorId:myId,name:me,self:1},...au].map(p=>`<div class="st" data-act="prof" data-uid="${esc(p.authorId)}"><div class="ring s">${avatar(p.authorId,p.name)}</div><span>${p.self?"คุณ":esc(nameOf(p.authorId,p.name))}</span></div>`).join("");
+  app.innerHTML=`<div class="hi">สวัสดี ${esc(nameOf(myId,me))} 👋</div><div class="stories">${st}</div>
+  <div style="color:#fff;font-weight:700;margin-top:6px">เลือกบล็อกที่ต้องการ</div>
+  <div class="pick">
+    <button class="big lost" data-go="lost"><span class="e">😢</span><b>ของหาย</b><span class="s">ดูโพสต์คนที่ทำของหาย${loaded?" · "+n("lost")+" โพสต์":""}</span></button>
+    <button class="big found" data-go="found"><span class="e">🙌</span><b>เก็บของได้</b><span class="s">ดูโพสต์ของที่มีคนเก็บได้${loaded?" · "+n("found")+" โพสต์":""}</span></button>
+    <button class="big chat" data-go="chat"><span class="e">💬</span><b>พูดคุยทั่วไป</b><span class="s">โพสต์พูดคุยของทุกคนในโรงเรียน${loaded?" · "+n("general")+" โพสต์":""}</span></button>
+  </div>`;
+}
+function keepInputs(fn){
+  const saved={};document.querySelectorAll("input[data-pid]").forEach(i=>saved[i.dataset.pid]=i.value);
+  const ae=document.activeElement,apid=ae&&ae.dataset&&ae.dataset.pid;
+  fn();
+  document.querySelectorAll("input[data-pid]").forEach(i=>{if(saved[i.dataset.pid]!=null)i.value=saved[i.dataset.pid]});
+  if(apid){const i=document.querySelector(`input[data-pid="${CSS.escape(apid)}"]`);if(i){i.focus();const l=i.value.length;try{i.setSelectionRange(l,l)}catch(e){}}}
+}
+const state=(db_,ld,len,msg)=>!db_?'<div class="empty">เชื่อมต่อ Firebase ไม่ได้ ตรวจสอบค่า FIREBASE_CONFIG และการเปิด Anonymous sign-in</div>':!ld?'<div class="empty">กำลังโหลด…</div>':!len?`<div class="empty">${msg}</div>`:"";
+function renderFeed(type,app){
+  keepInputs(()=>{
+    const kind=type==="chat"?"general":type;const L=posts.filter(p=>p.type===kind&&(kind==="general"||fCat==="all"||p.category===fCat));
+    const body=state(db,loaded,L.length,"ยังไม่มีโพสต์ — กด ➕ ด้านล่างเพื่อเป็นคนแรก")||L.map(postHtml).join("");
+    app.innerHTML=`<div class="top"><button class="ghost" data-go="home">← กลับ</button><b>${type==="lost"?"😢 ของหาย":type==="chat"?"💬 พูดคุยทั่วไปในโรงเรียน":"🙌 เก็บของได้"}</b></div>
+    <div class="scroll" style="${type==="chat"?"display:none":""}">${[["all","ทุกหมวด"],...CATS.map(c=>[c,c])].map(([k,l])=>`<button class="chip ${fCat===k?"on":""}" data-act="cat" data-v="${esc(k)}">${esc(l)}</button>`).join("")}</div>${body}`;
+  });
+}
+function renderPost(app){
+  keepInputs(()=>{
+    const p=posts.find(x=>x.id===viewPid);
+    app.innerHTML=`<div class="top"><button class="ghost" data-act="back">← กลับ</button><b>โพสต์</b></div>${p?postHtml(p):'<div class="empty">ไม่พบโพสต์นี้</div>'}`;
+  });
+}
+function postHtml(p){
+  const cs=comments.filter(c=>c.postId===p.id).sort((a,b)=>a.createdAt-b.createdAt);
+  const lk=likes.filter(l=>l.postId===p.id),liked=lk.some(l=>l.userId===myId);
+  const ex=expanded.has(p.id),shown=ex?cs:cs.slice(-2),mine=p.authorId===myId||canEdit,nm=esc(nameOf(p.authorId,p.name)),au=esc(p.authorId);
+  return `<article class="post"><div class="ph">${avatar(p.authorId,p.name)}<div class="who"><b data-act="prof" data-uid="${au}">${nm}</b><div class="meta">${p.type==="general"?"":"📍 "+esc(p.place||"-")+" · "}${ago(p.createdAt)}</div></div>
+    ${mine?`${p.type==="general"?"":`<button class="ghost" data-act="done" data-pid="${esc(p.id)}">${p.resolved?"เปิดอีกครั้ง":"✔ เสร็จแล้ว"}</button>`}<button class="ghost" data-act="del" data-pid="${esc(p.id)}">🗑</button>`:""}</div>
+    ${p.image?`<img class="pic" src="${esc(p.image)}" alt="">`:""}
+    <div class="acts"><button class="ic" data-act="like" data-pid="${esc(p.id)}" aria-label="ถูกใจ">${liked?"❤️":"🤍"}</button><span class="ic" style="font-size:1.4rem">💬</span><span class="meta" style="margin-left:auto">${lk.length?"ถูกใจ "+lk.length+" คน":""}</span></div>
+    <div class="pb">${p.type==="general"?'<span class="tag general">💬 พูดคุย</span>':`<span class="tag ${p.resolved?"":p.type}">${p.resolved?"✔ ได้คืนแล้ว":p.type==="lost"?"ของหาย":"เก็บได้"}</span> <span class="meta">${esc(p.category)}</span>`}<br><b data-act="prof" data-uid="${au}">${nm}</b> <b>${esc(p.title)}</b> ${esc(p.desc).replace(/\n/g,"<br>")}
+    ${p.contact?`<div class="meta">📞 ${esc(p.contact)}</div>`:""}</div>
+    ${cs.length>shown.length?`<button class="more" data-act="more" data-pid="${esc(p.id)}">ดูคอมเมนต์ทั้งหมด ${cs.length} รายการ</button>`:""}
+    ${shown.map(c=>`<div class="cm"><div><b data-act="prof" data-uid="${esc(c.authorId)}">${esc(nameOf(c.authorId,c.name))}</b> ${esc(c.text)}</div>${(c.authorId===myId||canEdit)?`<button class="x" data-act="delcm" data-cid="${esc(c.id)}" aria-label="ลบ">✕</button>`:""}</div>`).join("")}
+    <div class="cadd">${avatar(myId,me,"sm")}<input data-pid="${esc(p.id)}" maxlength="300" placeholder="เพิ่มความคิดเห็น…"><button class="link" data-act="send" data-pid="${esc(p.id)}">โพสต์</button></div></article>`;
+}
+function renderProfile(app){
+  const uid=viewUid||myId,own=uid===myId,p=profiles[uid]||{};
+  const src=posts.find(x=>x.authorId===uid)||comments.find(x=>x.authorId===uid)||chats.find(x=>x.authorId===uid)||{};
+  const nm=own?nameOf(uid,me):nameOf(uid,src.name);
+  const mine=posts.filter(x=>x.authorId===uid),ids=new Set(mine.map(x=>x.id));
+  const lk=likes.filter(l=>ids.has(l.postId)).length,nc=comments.filter(c=>c.authorId===uid).length;
+  const tiles=mine.map(x=>`<div class="tile" data-act="openpost" data-pid="${esc(x.id)}">${x.image?`<img src="${esc(x.image)}" alt="">`:`<span>${x.type==="lost"?"😢":x.type==="general"?"💬":"🙌"}<br>${esc(x.title)}</span>`}</div>`).join("");
+  app.innerHTML=`<div class="top">${viewUid&&!own?'<button class="ghost" data-act="back">← กลับ</button>':""}<b>${esc(nm)}</b></div>
+  <div class="panel pf"><div class="pfhead"><div class="ring">${avatar(uid,nm,"xl")}</div><div class="stats"><div><b>${mine.length}</b><span>โพสต์</span></div><div><b>${lk}</b><span>ถูกใจ</span></div><div><b>${nc}</b><span>คอมเมนต์</span></div></div></div>
+  <div class="pname">${esc(nm)}</div><div class="bio">${esc(p.bio||(own?"ยังไม่มีคำอธิบาย กด “แก้ไขโปรไฟล์” เพื่อเพิ่ม":""))}</div>
+  ${own?'<button class="ghost wide" data-act="editpf">✏️ แก้ไขโปรไฟล์</button>':""}</div>
+  <div class="grid">${tiles||'<div class="empty">ยังไม่มีโพสต์</div>'}</div>`;
+}
+function renderChat(app){
+  const old=$("chatIn"),val=old?old.value:"",foc=!!old&&document.activeElement===old;
+  const b0=$("chatBox"),stick=!b0||b0.scrollHeight-b0.scrollTop-b0.clientHeight<80;
+  const body=state(db,loaded,chats.length,"ยังไม่มีข้อความ ทักทายเป็นคนแรกเลย 👋").replace('class="empty"','class="empty" style="color:var(--mut)"')||chats.slice(-200).map(c=>{const mine=c.authorId===myId;return `<div class="msg ${mine?"me":""}">${avatar(c.authorId,c.name,"sm")}<div class="bub"><div class="meta"><b>${esc(nameOf(c.authorId,c.name))}</b> · ${ago(c.createdAt)}${(mine||canEdit)?`<button class="x" data-act="cdel" data-cid="${esc(c.id)}" aria-label="ลบ">✕</button>`:""}</div>${esc(c.text).replace(/\n/g,"<br>")}</div></div>`}).join("");
+  app.innerHTML=`<div class="top"><b>💬 พูดคุยทั่วไปในโรงเรียน</b></div><div class="chatbox" id="chatBox">${body}</div><div class="chatadd"><input id="chatIn" maxlength="300" placeholder="พิมพ์ข้อความ…"><button class="pri" data-act="csend">ส่ง</button></div>`;
+  const i=$("chatIn");i.value=val;if(foc)i.focus();
+  const b=$("chatBox");if(stick)b.scrollTop=b.scrollHeight;
+}
+async function sendChat(){
+  const i=$("chatIn");if(!i||!db)return;const t=i.value.trim();if(!t)return;i.value="";
+  try{await db.collection("chats").add({text:t,name:me,authorId:myId,createdAt:Date.now()})}catch(e){i.value=t;alert("ส่งข้อความไม่สำเร็จ ลองใหม่อีกครั้ง")}
+}
+async function sendComment(pid){
+  const i=document.querySelector(`input[data-pid="${CSS.escape(pid)}"]`);if(!i||!db)return;
+  const t=i.value.trim();if(!t)return;i.value="";
+  try{await db.collection("comments").add({postId:pid,text:t,name:me,authorId:myId,createdAt:Date.now()})}catch(e){i.value=t;alert("ส่งคอมเมนต์ไม่สำเร็จ ลองใหม่อีกครั้ง")}
+}
+async function toggleLike(pid){
+  if(!db)return;const ref=db.doc("likes/"+pid+"_"+pkey(myId));
+  try{if(likes.some(l=>l.postId===pid&&l.userId===myId))await ref.delete();else await ref.set({postId:pid,userId:myId})}catch(e){}
+}
+document.addEventListener("click",async e=>{
+  const g=e.target.closest("[data-go]");if(g){viewUid=null;nav(g.dataset.go);return}
+  const a=e.target.closest("[data-act]");if(!a)return;
+  const act=a.dataset.act,pid=a.dataset.pid;
+  if(act==="prof"){viewUid=a.dataset.uid||null;nav("profile")}
+  else if(act==="myprof"){viewUid=null;nav("profile")}
+  else if(act==="back"){if(history.length>1)history.back();else nav("home")}
+  else if(act==="openpost"){viewPid=pid;nav("post")}
+  else if(act==="editpf"){const p=profiles[myId]||{};$("pName").value=nameOf(myId,me);$("pBio").value=p.bio||"";pfImg=null;$("pPrev").style.display=p.avatar?"block":"none";if(p.avatar)$("pPrev").src=p.avatar;$("pErr").textContent="";$("mPf").classList.add("show")}
+  else if(act==="csend")sendChat();
+  else if(act==="cdel"){db.doc("chats/"+a.dataset.cid).delete().catch(()=>alert("ลบไม่สำเร็จ"))}
+  else if(act==="cat"){fCat=a.dataset.v;render()}
+  else if(act==="more"){expanded.add(pid);render()}
+  else if(act==="like")toggleLike(pid);
+  else if(act==="send")sendComment(pid);
+  else if(act==="delcm"){try{await db.doc("comments/"+a.dataset.cid).delete()}catch(x){alert("ลบไม่สำเร็จ")}}
+  else if(act==="done"){const p=posts.find(x=>x.id===pid);if(p)db.doc("posts/"+pid).update({resolved:!p.resolved}).catch(()=>alert("ทำรายการไม่สำเร็จ"))}
+  else if(act==="del"){if(confirm("ลบโพสต์นี้?"))db.doc("posts/"+pid).delete().catch(()=>alert("ลบไม่สำเร็จ"))}
+});
+document.addEventListener("keydown",e=>{if(e.key!=="Enter")return;if(e.target.matches("input[data-pid]"))sendComment(e.target.dataset.pid);else if(e.target.id==="chatIn")sendChat()});
+window.addEventListener("hashchange",render);
+
+$("fCat").innerHTML=CATS.map(c=>`<option>${esc(c)}</option>`).join("");
+const setType=t=>{newType=t;$("tLost").classList.toggle("on",t==="lost");$("tFound").classList.toggle("on",t==="found");$("tChat").classList.toggle("on",t==="general");const g=t==="general";$("fcWrap").style.display=$("plWrap").style.display=g?"none":"";$("tlLabel").textContent=g?"หัวข้อ":"ชื่อสิ่งของ";$("fTitle").placeholder=g?"เช่น ใครมีสรุปวิทยาศาสตร์บ้าง":"เช่น กระเป๋าสตางค์สีดำ"};
+$("tLost").onclick=()=>setType("lost");$("tFound").onclick=()=>setType("found");$("tChat").onclick=()=>setType("general");
+$("nNew").onclick=()=>{const r=route();setType(r==="found"?"found":r==="chat"?"general":"lost");$("err").textContent="";$("mNew").classList.add("show")};
+$("cancelNew").onclick=()=>$("mNew").classList.remove("show");
+$("fImg").onchange=e=>{const f=e.target.files[0];if(f)shrink(f,720,d=>{imgData=d;$("prev").src=d;$("prev").style.display="block"})};
+$("saveNew").onclick=async()=>{
+  const title=$("fTitle").value.trim();
+  if(!db){$("err").textContent="เชื่อมต่อไม่ได้ ลองรีเฟรชหน้า";return}
+  if(!title){$("err").textContent="กรุณาใส่ชื่อสิ่งของ";return}
+  $("saveNew").disabled=true;
+  try{
+    await db.collection("posts").add({type:newType,category:$("fCat").value,title,desc:$("fDesc").value.trim(),place:$("fPlace").value.trim(),contact:$("fContact").value.trim(),name:me,image:imgData,authorId:myId,resolved:false,createdAt:Date.now()});
+    ["fTitle","fDesc","fPlace","fContact","fImg"].forEach(i=>$(i).value="");imgData="";$("prev").style.display="none";
+    $("mNew").classList.remove("show");
+    viewUid=null;nav(newType==="general"?"chat":newType);
+  }catch(e){$("err").textContent="โพสต์ไม่สำเร็จ (รูปอาจใหญ่เกินไปหรือไม่มีสิทธิ์เขียน)"}
+  $("saveNew").disabled=false;
+};
+$("pImg").onchange=e=>{const f=e.target.files[0];if(f)shrink(f,160,d=>{pfImg=d;$("pPrev").src=d;$("pPrev").style.display="block"})};
+$("cancelPf").onclick=()=>$("mPf").classList.remove("show");
+$("savePf").onclick=async()=>{
+  const name=$("pName").value.trim();
+  if(!name){$("pErr").textContent="กรุณาใส่ชื่อ";return}
+  if(!db){$("pErr").textContent="เชื่อมต่อไม่ได้ ลองรีเฟรชหน้า";return}
+  $("savePf").disabled=true;
+  try{
+    const old=profiles[myId]||{};
+    await db.doc("profiles/"+pkey(myId)).set({userId:myId,name,bio:$("pBio").value.trim(),avatar:pfImg!=null?pfImg:(old.avatar||""),updatedAt:Date.now()});
+    me=name;store.set("lf_name",name);$("mPf").classList.remove("show");render();
+  }catch(e){$("pErr").textContent="บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง"}
+  $("savePf").disabled=false;
+};
+
+const dyn=()=>{if(route()!=="name")render()};
+(function(){
+  const s=$("santa");if(!s||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const fly=()=>{s.classList.remove("fly");void s.offsetWidth;s.classList.add("fly")};
+  s.addEventListener("animationend",()=>s.classList.remove("fly"));
+  setTimeout(fly,3000);setInterval(fly,30000);
+})();
+const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+let dip=null;const inst=$("inst");
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();dip=e;if(!standalone){inst.style.display="inline-block";inst.textContent="📲 ติดตั้งแอปบนมือถือ"}});
+if(!standalone&&/iphone|ipad/i.test(navigator.userAgent)){inst.style.display="inline-block";inst.textContent="📲 วิธีติดตั้งแอป"}
+inst.onclick=async()=>{if(dip){dip.prompt();dip=null;inst.style.display="none"}else alert("iPhone: กดปุ่มแชร์ (สี่เหลี่ยมมีลูกศรขึ้น) แล้วเลือก “เพิ่มลงหน้าจอโฮม”")};
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+
+render();
+(async()=>{
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db=firebase.firestore();
+    const cred=await firebase.auth().signInAnonymously();
+    myId=cred.user.uid;
+  }catch(e){db=null;console.error(e)}
+  if(!db){dyn();return}
+  setTimeout(()=>{if(!loaded){loaded=true;dyn()}},10000);
+  db.collection("posts").orderBy("createdAt","desc").onSnapshot(s=>{loaded=true;posts=s.docs.map(d=>({id:d.id,...d.data()}));dyn()},()=>{});
+  db.collection("comments").onSnapshot(s=>{comments=s.docs.map(d=>({id:d.id,...d.data()}));dyn()},()=>{});
+  db.collection("chats").orderBy("createdAt","asc").onSnapshot(s=>{chats=s.docs.map(d=>({id:d.id,...d.data()}));dyn()},()=>{});
+  db.collection("likes").onSnapshot(s=>{likes=s.docs.map(d=>({id:d.id,...d.data()}));dyn()},()=>{});
+  db.collection("profiles").onSnapshot(s=>{
+    profiles={};s.docs.forEach(d=>{const x=d.data();if(x&&x.userId)profiles[x.userId]=x});
+    if(!madeProf&&me&&!profiles[myId]){madeProf=true;db.doc("profiles/"+pkey(myId)).set({userId:myId,name:me,bio:"",avatar:"",updatedAt:Date.now()}).catch(()=>{})}
+    dyn();
+  },()=>{});
+})();
+</script>
+</body>
+</html>
